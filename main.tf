@@ -1,22 +1,9 @@
-terraform {
-  required_providers {
-    aws = {
-        source = "hashicorp/aws"
-        version = "~5.0"
-    }
-  }
-}
-
-#configure AWS Provider
-
-provider "aws" {
-    region = "ap-south-1" 
-}
-
+# Create S3 bucket to hold the website
 resource "aws_s3_bucket" "website_bucket" {
     bucket = var.bucket_name  
 }
 
+# Upload index.html to S3 bucket
 resource "aws_s3_object" "index.html" {
   bucket = aws_s3_bucket.website_bucket.id
   key = "index.html"
@@ -25,7 +12,7 @@ resource "aws_s3_object" "index.html" {
   content_type = "text/html"
 
 }
-
+# Upload error.html to S3 bucket
 resource "aws_s3_object" "error.html" {
   bucket = aws_s3_bucket.website_bucket.id
   key = "error.html"
@@ -34,11 +21,12 @@ resource "aws_s3_object" "error.html" {
   content_type = "text/html"
 }
 
+# Create CloudFront Origin Access Identity
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
   comment = "Origin Access Identity for static website"  
 }
 
-
+# Create CloudFront Distribution
 resource "aws_cloudfront_distribution" "StaticWebsite_cloudfront_distribution" {
   origin {
     domain_name = aws_s3_bucket.website_bucket.bucket_regional_domain_name
@@ -84,7 +72,8 @@ resource "aws_cloudfront_distribution" "StaticWebsite_cloudfront_distribution" {
     Environment = "Production"  
   }
 }
-#
+
+# S3 Bucket Policy to allow CloudFront Origin Access Identity to read objects
 resource "aws_s3_bucket_policy" "website_bucket_policy" {
   bucket = aws_s3_bucket.website_bucket.id
   policy = jsonencode({
