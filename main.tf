@@ -4,7 +4,7 @@ resource "aws_s3_bucket" "website_bucket" {
 }
 
 # Upload index.html to S3 bucket
-resource "aws_s3_object" "index.html" {
+resource "aws_s3_object" "index_html" {
   bucket = aws_s3_bucket.website_bucket.id
   key = "index.html"
   source = "website/index.html"
@@ -13,7 +13,7 @@ resource "aws_s3_object" "index.html" {
 
 }
 # Upload error.html to S3 bucket
-resource "aws_s3_object" "error.html" {
+resource "aws_s3_object" "error_html" {
   bucket = aws_s3_bucket.website_bucket.id
   key = "error.html"
   source = "website/error.html"

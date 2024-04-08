@@ -2,7 +2,7 @@
 
 variable "bucket_name" {
     description = "Unique name of the bucket"
-    default = "my_static_Manu_website"
+    default = "my-static-manu-website"
 }
 
 variable "website_index_document" {
